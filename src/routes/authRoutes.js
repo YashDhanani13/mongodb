@@ -1,9 +1,7 @@
-import express from 'express';
-import { signup } from '../controllers/authController';
-
-
+import express from "express";
+import { signup } from "../controllers/authController";
 
 const route = express.Router();
-route.post("/signup" , signup);
+route.post("/signup", signup);
 
-module.exports = Router;
+module.exports = router;
