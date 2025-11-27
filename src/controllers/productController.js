@@ -1,18 +1,12 @@
-
-
 // get product
 
-export const getProduct = (req, res) =>{
-    res.json();
-    
-}
-
-
-
+export const getProduct = (req, res) => {
+  res.json();
+};
 
 //  create product
 export const createProduct = (req, res) => {
-  const { name, price, category, description } = req.body();
+  const { name, price, category, description } = req.body;
 };
 
 const newProduct = {

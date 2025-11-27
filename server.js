@@ -9,18 +9,17 @@ dotenv.config();
 
 const app = express();
 
-//  middleware
+// Middleware
 app.use(express.json());
 app.use(cors());
 
-//db conneactionreq
-
+// DB Connection
 connectDB();
 
-//routes (create a server):-
-
-app.use("/", (req, res) => {
-  return res.status(200).send("hello");
+// Routes
+app.get("/", (req, res) => {
+  // Changed from app.use to app.get
+  return res.status(200).send("Server is running ✅");
 });
 
 app.use("/api/auth", authRoutes);

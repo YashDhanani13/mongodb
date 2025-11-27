@@ -4,14 +4,12 @@ import {
   createProduct,
   deleteProduct,
 } from "../controllers/productController";
-import router from "./authRoutes";
 
-const roter = express();
+const router = express.Router();
 
 router.get("/", getProduct);
 
 router.post("/", createProduct);
 router.delete("/:id", deleteProduct);
- 
 
-export default productRoutes;
+export default router;
