@@ -1,39 +1,48 @@
-// const User = require("../models/User");
-// const bcrypt = require("bcryptjs");
-
 import bcrypt from "bcrypt";
-import User from "../model/User";
+import User from "../model/User.js"; // make sure .js extension if using ES Modules
+
 export const signup = async (req, res) => {
-  const { email, password, confirmPassword } = req.body;
+  try {
+    const { email, password, confirmPassword } = req.body;
 
-  // if not any filed are nit filped thenn it show this message
+    // 1. Check required fields
+    if (!email || !password || !confirmPassword) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
 
-  if (!email || !password || !confirmPassword) {
-    return res.status(400).json({ message: "All fields are required" });
+    // 2. Check password match
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: "Passwords do not match" });
+    }
+
+    // 3. Check user already exists
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    // 4. Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // 5. Create user
+    const newUser = await User.create({
+      email,
+      password: hashedPassword,
+    });
+
+    // 6. Send response
+    res.status(201).json({
+      message: "Signup successful",
+      user: {
+        id: newUser._id,
+        email: newUser.email,
+      }
+    });
+
+  } 
+  catch (error) {
+    console.error("Signup error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
-  // here  it cheack password adn confirm passwored both same so it move a head other it given error
-
-  if (password !== confirmPassword) {
-    return res.status(400).json({ message: "Passwords do not match" });
-  }
-
-  const userExists = await User.findOne({ email });
-  if (userExists) {
-    return res.status(400).json({ message: "User already exists" });
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const newUser = await User.create({
-    email,
-    password: hashedPassword,
-  });
-
-  res.status(201).json({
-    message: "Signup successful",
-    user: {
-      id: newUser._id,
-      email: newUser.email,
-    },
-  });
 };
+
